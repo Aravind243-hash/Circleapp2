@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sketchpad</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      font-family: sans-serif;
+      background: #f0f0f0;
+    }
+
+    canvas {
+      border: 2px solid #444;
+      margin-top: 10px;
+      background: white;
+      cursor: crosshair;
+    }
+
+    .toolbar {
+      margin-top: 10px;
+    }
+
+    input[type="color"],
+    input[type="range"],
+    button {
+      margin: 0 10px;
+      padding: 6px 10px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+<div id="playscreen" class="playscreen">
+  <h1>🖌️ Sketchpad</h1>
+  <div class="toolbar">
+    <label for="color">Color: </label>
+    <input type="color" id="color" value="#000000" />
+    <label for="size">Size: </label>
+    <input type="range" id="size" min="1" max="30" value="5" />
+    <button onclick="clearCanvas()">Clear</button>
+  </div>
+
+
+
+  <canvas id="sketchpad" width="800" height="500"></canvas>
+
+  </div>
+<div id="resultscreen" class="resultscreen">
+  <h1> Your score is:</h1>
+  <p id="result"></p>
+
+</div>
+  <script>
+    const canvas = document.getElementById("sketchpad");
+    const ctx = canvas.getContext("2d");
+    const colorPicker = document.getElementById("color");
+    const sizeSlider = document.getElementById("size");
+    document.getElementById("resultscreen").style.display="none";
+    
+    let drawing = false;
+
+    canvas.addEventListener("mousedown", () => drawing = true);
+    canvas.addEventListener("mouseup", () => drawing = false);
+    canvas.addEventListener("mouseleave", () => drawing = false);
+
+    canvas.addEventListener("mousemove", draw);
+    let score;
+    let arr1=[];
+    function draw(e) {
+      if (!drawing) return;
+
+      const x = e.offsetX;
+      const y = e.offsetY;
+
+      ctx.lineWidth = sizeSlider.value;
+      ctx.lineCap = "round";
+      ctx.strokeStyle = colorPicker.value;
+
+      ctx.lineTo(x, y);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      arr1.push([x,y])
+    }
+
+    function clearCanvas() {
+      console.log(arr1);
+      document.getElementById("playscreen").style.display="none";
+      fetch("/api/process",{
+        method: 'POST',
+        headers: {'Content-Type' : 'application/json'},
+        body: JSON.stringify({arr: arr1})
+        
+
+      })
+      .then(res => res.json())
+      .then(result => {
+
+       score=result.score;
+       document.getElementById("resultscreen").innerHTML = `<h1>Your score is: ${score}</h1>`;
+       document.getElementById("resultscreen").style.display="block";
+
+
+      })
+      .catch(err => console.error(err));
+      //document.getElementById("resultscreen").getElementById("result").textContent=score;
+      
+      
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.beginPath();
+    }
+  </script>
+</body>
+</html>
