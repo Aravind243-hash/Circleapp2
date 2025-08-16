@@ -27,7 +27,7 @@ function processArray(arr) {
     }
     
     let rm=0;
-    for(const point of arr)
+    for(const point of arr);
     {
       rm+=((point[0]-centroidx)*(point[0]-centroidx)+(point[1]-centroidy)*(point[1]-centroidy))**0.5;
     }
