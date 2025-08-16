@@ -45,11 +45,16 @@ function processArray(arr) {
     if(count!=0 && rm!=0)
     {
       mad/=(count*rm);
+      mad=1-mad
     }
     else
       { mad=0;
       }
-    return mad;
+    mad=mad*100;
+    mad=Math.trunc(mad * 10) / 10
+    if(mad<0) mad=0;
+    return (mad);
+    
 
 
 
