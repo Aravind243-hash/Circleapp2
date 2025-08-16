@@ -27,7 +27,7 @@ function processArray(arr) {
     }
     
     let rm=0;
-    for(const point of arr);
+    for(const point of arr)
     {
       rm+=((point[0]-centroidx)*(point[0]-centroidx)+(point[1]-centroidy)*(point[1]-centroidy))**0.5;
     }
@@ -40,12 +40,15 @@ function processArray(arr) {
     for(const point of arr)
     {
       r=((point[0]-centroidx)*(point[0]-centroidx)+(point[1]-centroidy)*(point[1]-centroidy))**0.5;
-      mad+=(max((r-rm),(rm-r)));
+      mad+=(Math.max((r-rm),(rm-r)));
     }
     if(count!=0 && rm!=0)
     {
       mad/=(count*rm);
     }
+    else
+      { mad=0;
+      }
     return mad;
 
 
