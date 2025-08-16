@@ -10,7 +10,43 @@ export default function handler(req, res) {
 
 function processArray(arr) {
 
-    return arr[0][1];
+    //return arr[0][1];
+    let centroidx=0;
+    let centroidy=0;
+    let count=0;
+    for(const point of arr)
+    {
+      count++;
+      centroidx+=point[0];
+      centroidy+=point[1];
+
+    }
+    if(count!=0){
+    centroidx/=count;
+    centroidy/=count;
+    }
+    
+    let rm=0;
+    for(const point of arr)
+    {
+      rm+=((point[0]-centroidx)*(point[0]-centroidx)+(point[1]-centroidy)*(point[1]-centroidy))**0.5;
+    }
+    if(count!=0)
+    {
+      rm/=count;
+    }
+    let r;
+    let mad=0;
+    for(const point of arr)
+    {
+      r=((point[0]-centroidx)*(point[0]-centroidx)+(point[1]-centroidy)*(point[1]-centroidy))**0.5;
+      mad+=(max((r-rm),(rm-r)));
+    }
+    if(count!=0 && rm!=0)
+    {
+      mad/=(count*rm);
+    }
+    return mad;
 
 
 
